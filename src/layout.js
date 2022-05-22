@@ -24,7 +24,7 @@ function callback(key) {
   console.log(key);
 }
 
-// Function to essentially store navigation items
+// Function to store navigation items
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -34,7 +34,6 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
-// set yp states for SideBar's drawer
 
 const navbarItems = [];
 
@@ -75,15 +74,18 @@ const subMenuItems = [
 
 const text = "";
 
-// inline css is constantly use to override Ant Design's default styles
+// NOTE: inline css is constantly use to override Ant Design's default styles
 
 function Layoutt() {
+  // states for the variables we retrieve from the backend
   const [userFirstName, setUserFN] = useState([]);
   const [userLastName, setUserLN] = useState([]);
   // states for undo feature
   const [oldUFN, setOldUFN] = useState([]);
   const [oldULN, setOldULN] = useState([]);
   const [undoVisibility, setUndoVisibility] = useState(false);
+
+
   // on load, get user data from localhost:8080/users and set it to the respective states
   useEffect(() => {
     fetch("http://localhost:8080/users")
@@ -95,6 +97,7 @@ function Layoutt() {
         setOldUFN(data[0].firstname);
       });
   }, []);
+
   // on change of the input, set the value to the respective states
   const onChangeFS = (e) => {
     setOldUFN(userFirstName);
@@ -104,8 +107,6 @@ function Layoutt() {
     setOldULN(userLastName);
     setUserLN(e.target.value);
   };
-
-
 
   // on submit, update the user's first and last name in the backend
   const onSubmit = (e) => {
