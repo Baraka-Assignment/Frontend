@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import { Layout, Menu, Input, Collapse, Col, Row, Button } from "antd";
@@ -15,7 +15,6 @@ import {
   UserSwitchOutlined,
   CalendarOutlined,
   DollarOutlined,
-
 } from "@ant-design/icons";
 
 const { Header, Content, Sider } = Layout;
@@ -79,6 +78,48 @@ const text = "";
 // inline css is constantly use to override Ant Design's default styles
 
 function Layoutt() {
+  const [userFirstName, setUserFS] = useState([]);
+  const [userLastName, setUserLS] = useState([]);
+  // on load, get user data from localhost:8080/users and set it to the respective states
+  useEffect(() => {
+    fetch("http://localhost:8080/users")
+      .then((response) => response.json())
+      .then((data) => {
+        setUserFS(data[0].firstname);
+        setUserLS(data[0].lastname);
+      });
+  }, []);
+  // on change of the input, set the value to the respective states
+  const onChangeFS = (e) => {
+    setUserFS(e.target.value);
+  };
+  const onChangeLS = (e) => {
+    setUserLS(e.target.value);
+  };
+
+
+  // on submit, update the user's first and last name in the backend
+  const onSubmit = (e) => {
+    const url = "http://localhost:8080/users" + "/1/" + userFirstName + "/" + userLastName + "/";
+    e.preventDefault();
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstname: userFirstName,
+        lastname: userLastName,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+      });
+  };
+
+
+
+
   return (
     <Layout>
       <Header className="navbar">
@@ -86,17 +127,15 @@ function Layoutt() {
           mode="horizontal"
           defaultSelectedKeys={["2"]}
           items={navbarItems}
-        >
-        </Menu>
-        <Button
-        className="navbar-button"
-        >-</Button>
+        ></Menu>
+        <Button className="navbar-button">-</Button>
         <div className="logo">
-          <img src = "https://www.getbaraka.com/wp-content/uploads/2020/10/barak-logo.svg" alt="barak-logo" />
+          <img
+            src="https://www.getbaraka.com/wp-content/uploads/2020/10/barak-logo.svg"
+            alt="barak-logo"
+          />
         </div>
-        <div className="admin">
-          Osama
-        </div>
+        <div className="admin">Osama</div>
       </Header>
       <Layout>
         <Sider width={200} height={800}>
@@ -129,7 +168,7 @@ function Layoutt() {
             }}
           >
             <div style={{}}>
-              <h1>NAME NAME</h1>
+              <h1>{userFirstName} {userLastName}</h1>
             </div>
             <Menu
               mode="horizontal"
@@ -163,10 +202,10 @@ function Layoutt() {
                     <h1>First - Last Name</h1>
                     <Row>
                       <Col span={12}>
-                        <Input placeholder="First Name" />
+                        <Input onChange={onChangeFS} value={userFirstName} />
                       </Col>
                       <Col span={12}>
-                        <Input placeholder="Last Name" />
+                        <Input onChange={onChangeLS} value={userLastName} />
                       </Col>
                     </Row>
                   </Panel>
@@ -182,7 +221,7 @@ function Layoutt() {
                     key="3"
                     style={{ backgroundColor: "#a5a5a5" }}
                   >
-                    <p>{text}</p>
+                    <p></p>
                   </Panel>
                   <Panel
                     header="Employment Info"
@@ -199,8 +238,8 @@ function Layoutt() {
                     <p>{text}</p>
                   </Panel>
                 </Collapse>
-                <Button type="primary">Save</Button>
               </Content>
+                <Button onClick={onSubmit} type="primary">Save</Button>
             </Content>
           </Content>
         </Layout>
