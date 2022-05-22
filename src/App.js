@@ -1,10 +1,10 @@
 import './App.css';
-import Layout from './layout.js';
+import Layoutt from './layout.js';
 
 
 function App() {
   return (
-    <Layout />
+    <Layoutt />
   );
 }
 
