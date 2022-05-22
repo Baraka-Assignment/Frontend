@@ -2,9 +2,8 @@
 
 Clones the project into the directory, you type this in.
 
-### Step 2 : `cd <directory>`
+### Step 2 : `cd frontend`
 Changes the directory to the one you cloned the project into.\
-Instead of "<directory>", enter the directory you cloned the project into.
 
 ### Step 3: `npm install` 
 
