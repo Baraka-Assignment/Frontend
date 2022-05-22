@@ -78,24 +78,33 @@ const text = "";
 // inline css is constantly use to override Ant Design's default styles
 
 function Layoutt() {
-  const [userFirstName, setUserFS] = useState([]);
-  const [userLastName, setUserLS] = useState([]);
+  const [userFirstName, setUserFN] = useState([]);
+  const [userLastName, setUserLN] = useState([]);
+  // states for undo feature
+  const [oldUFN, setOldUFN] = useState([]);
+  const [oldULN, setOldULN] = useState([]);
+  const [undoVisibility, setUndoVisibility] = useState(false);
   // on load, get user data from localhost:8080/users and set it to the respective states
   useEffect(() => {
     fetch("http://localhost:8080/users")
       .then((response) => response.json())
       .then((data) => {
-        setUserFS(data[0].firstname);
-        setUserLS(data[0].lastname);
+        setUserFN(data[0].firstname);
+        setUserLN(data[0].lastname);
+        setOldULN(data[0].lastname);
+        setOldUFN(data[0].firstname);
       });
   }, []);
   // on change of the input, set the value to the respective states
   const onChangeFS = (e) => {
-    setUserFS(e.target.value);
+    setOldUFN(userFirstName);
+    setUserFN(e.target.value);
   };
   const onChangeLS = (e) => {
-    setUserLS(e.target.value);
+    setOldULN(userLastName);
+    setUserLN(e.target.value);
   };
+
 
 
   // on submit, update the user's first and last name in the backend
@@ -115,6 +124,13 @@ function Layoutt() {
       .then((response) => response.json())
       .then((data) => {
       });
+      // set the visibility of the undo button to true
+      setUndoVisibility(true);
+      // set it to false after 10 seconds
+      setTimeout(() => {
+        setUndoVisibility(false);
+      }
+      , 10000);
   };
 
 
@@ -239,7 +255,17 @@ function Layoutt() {
                   </Panel>
                 </Collapse>
               </Content>
-                <Button onClick={onSubmit} type="primary">Save</Button>
+                <Button onClick={onSubmit} type="primary" style={{marginLeft:20, marginBottom:20}}>Save</Button>
+                {undoVisibility ? (
+                  <Button onClick={() => {
+                    setUserLN(oldULN);
+                    setUserFN(oldUFN);
+                    setUndoVisibility(false);
+                  }} type="primary" style={{marginLeft:20, marginBottom:20}}>Undo</Button>
+                ) : (
+                  <div></div>
+                )}
+
             </Content>
           </Content>
         </Layout>
