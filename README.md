@@ -3,7 +3,7 @@
 Clones the project into the directory, you type this in.
 
 ### Step 2 : `cd frontend`
-Changes the directory to the one you cloned the project into.\
+Changes the directory to the one you cloned the project into.
 
 ### Step 3: `npm install` 
 
